@@ -5,8 +5,8 @@ MAINTAINER celsomarques <celso.marques82@gmail.com>
 RUN apk add --no-cache curl bash openjdk8-jre python3 py-pip nss libc6-compat
 
 # Overall ENV vars
-ENV SPARK_VERSION 3.0.1
-ENV HADOOP_VERSION 3.2
+ENV SPARK_VERSION 2.4.7
+ENV HADOOP_VERSION 2.7
 ENV LIVY_VERSION 0.7.0-incubating
 ENV SPARK_FILE spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION
 ENV LIVY_FILE apache-livy-$LIVY_VERSION-bin
@@ -37,6 +37,7 @@ RUN mkdir /$LIVY_HOME/logs && mkdir /$LIVY_HOME/upload
 
 # Add custom files, set permissions
 ADD entrypoint.sh .
+ADD conf/livy.conf /app/$LIVY_FILE/conf/livy.conf
 
 RUN chmod +x entrypoint.sh
 
