@@ -13,8 +13,7 @@ ENV LIVY_FILE apache-livy-$LIVY_VERSION-bin
 
 # Set directories
 ENV SPARK_HOME /usr/local/$SPARK_FILE
-ENV HADOOP_CONF_DIR /etc/hadoop/conf
-ENV LIVY_HOME /app/$LIVY_FILE
+ENV LIVY_HOME /livy
 
 # Spark ENV vars
 ENV SPARK_DOWNLOAD_URL https://downloads.apache.org/spark/spark-$SPARK_VERSION/$SPARK_FILE.tgz
@@ -27,17 +26,17 @@ RUN wget $SPARK_DOWNLOAD_URL && \
     rm $SPARK_FILE.tgz
 
 # Download and unzip Livy
-RUN mkdir -p /app/ && \
-    wget $LIVY_DOWNLOAD_URL && \
+RUN wget $LIVY_DOWNLOAD_URL && \
     unzip $LIVY_FILE.zip && \
-    mv $LIVY_FILE /app/. && \
+    mv $LIVY_FILE $LIVY_HOME && \
     rm $LIVY_FILE.zip
 
-RUN mkdir /$LIVY_HOME/logs && mkdir /$LIVY_HOME/upload
+RUN mkdir /$LIVY_HOME/logs
 
 # Add custom files, set permissions
 ADD entrypoint.sh .
-ADD conf/livy.conf /app/$LIVY_FILE/conf/livy.conf
+ADD conf/livy.conf $LIVY_HOME/conf/livy.conf
+ADD conf/spark-defaults.conf $LIVY_HOME/conf/spark-defaults.conf
 
 RUN chmod +x entrypoint.sh
 
